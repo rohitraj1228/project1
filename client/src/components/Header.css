@@ -8,6 +8,22 @@
 .bh-nav a { text-decoration:none; color:#102a43; font-weight:600; padding:6px 8px; border-radius:6px; }
 .bh-nav a:hover { background:#f7f7f7; }
 
+/* Search Bar */
+.bh-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.bh-search input {
+  max-width: 280px;
+  width: 100%;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+}
+
 /* Right actions */
 .bh-right { display:flex; align-items:center; gap:12px; }
 .bh-actions { display:flex; gap:12px; align-items:center; }
