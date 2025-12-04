@@ -1,0 +1,276 @@
+/* ===== BangleHouse Premium Theme ===== */
+/* Colors */
+:root{
+  --navy: #071427;            /* deep navy */
+  --gold: #D4AF37;            /* warm gold */
+  --soft: #F7F5F2;            /* off-white background */
+  --muted: #8b8b8b;
+  --card-bg: #ffffff;
+  --glass: rgba(255,255,255,0.04);
+}
+
+/* Typography */
+html,body,#root { height:100%; }
+body{
+  margin:0;
+  background: var(--soft);
+  color: #111;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* --- Header --- */
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding: 18px 32px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7));
+  position: sticky;
+  top:0;
+  z-index: 50;
+  box-shadow: 0 6px 18px rgba(12,16,20,0.06);
+  backdrop-filter: blur(6px);
+}
+
+.header-left {
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.brand {
+  font-family: "Playfair Display", serif;
+  font-size:28px;
+  color: var(--navy);
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:0.4px;
+}
+
+.search {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background: white;
+  padding:8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(12,16,20,0.04);
+  border: 1px solid rgba(16,24,40,0.04);
+}
+
+.search input{
+  border: none;
+  outline: none;
+  font-size:14px;
+  min-width:220px;
+  font-family:inherit;
+}
+
+/* right side */
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* cart badge */
+.cart-badge {
+  position: relative;
+}
+.cart-badge .count {
+  position: absolute;
+  top:-6px;
+  right:-6px;
+  background: var(--gold);
+  color: white;
+  font-size:11px;
+  padding:3px 6px;
+  border-radius:999px;
+  font-weight:600;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* --- Hero (underneath intro) --- */
+.hero {
+  max-width:1200px;
+  margin: 28px auto;
+  padding: 24px;
+  display:flex;
+  align-items:center;
+  gap:28px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
+  border-radius:16px;
+  box-shadow: 0 10px 40px rgba(8,12,20,0.06);
+}
+
+.hero-left {
+  flex:1;
+}
+
+.hero h2 {
+  font-family: "Playfair Display", serif;
+  font-size:40px;
+  margin:0 0 12px 0;
+  color: var(--navy);
+}
+
+.hero p {
+  margin:0 0 20px 0;
+  color: #333;
+  font-size:16px;
+  max-width:540px;
+}
+
+.cta {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background: var(--gold);
+  color: #08121b;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 10px 30px rgba(212,175,55,0.18);
+  border: none;
+}
+
+/* hero right: decorative product or placeholder */
+.hero-right {
+  width:320px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* --- Product grid & cards --- */
+.container {
+  max-width:1200px;
+  margin: 26px auto;
+  padding: 0 20px 60px;
+}
+
+.product-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+  gap:22px;
+}
+
+/* card */
+.product-card {
+  background: var(--card-bg);
+  border-radius:12px;
+  padding:14px;
+  box-shadow: 0 8px 28px rgba(16,24,40,0.06);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:300px;
+  position:relative;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(12,16,20,0.12);
+}
+
+.prod-img {
+  height:170px;
+  width:100%;
+  object-fit:cover;
+  border-radius:8px;
+  background: linear-gradient(180deg,#f6f6f6,#efefef);
+  transition: transform 400ms ease, filter 350ms ease;
+}
+
+.product-card:hover .prod-img {
+  transform: scale(1.03);
+  filter: saturate(1.03) contrast(1.02);
+}
+
+/* title/price row */
+.product-card h3 {
+  margin:0;
+  font-size:16px;
+  color: var(--navy);
+  font-weight:600;
+}
+
+.product-card .desc { color: #666; font-size:13px; margin-top:6px; flex:1; }
+
+.product-card .price {
+  font-weight:800;
+  color: var(--navy);
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.price .gold {
+  color: var(--gold);
+  font-size:14px;
+}
+
+/* add-to-cart button */
+.actions {
+  display:flex;
+  gap:8px;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:6px;
+}
+
+.actions button {
+  background: var(--navy);
+  color:white;
+  border:none;
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* small tag badge */
+.badge {
+  position:absolute;
+  top:12px;
+  left:12px;
+  background: rgba(212,175,55,0.12);
+  color: var(--gold);
+  font-weight:700;
+  padding:6px 8px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+/* footer */
+.site-footer {
+  margin-top:40px;
+  background:transparent;
+  padding:28px 20px;
+  color:#444;
+  text-align:center;
+  font-size:14px;
+}
+
+/* Responsive */
+@media (max-width:800px){
+  .hero { flex-direction:column; }
+  .hero-right { width:100%; order:-1; }
+  .hero-left h2 { font-size:28px; }
+  .search input { min-width: 120px; }
+}
