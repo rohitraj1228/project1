@@ -1,7 +1,9 @@
-// App.jsx
+// src/App.jsx
 import React, { useState, useRef, useEffect } from "react";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
+import Bangles from "./pages/Bangles";
+import "./index.css"; // ensure this is imported so styles below apply
 
 export default function App() {
   const [page, setPage] = useState("home");
@@ -56,54 +58,26 @@ export default function App() {
     reader.readAsDataURL(file);
   }
 
+  // search query state
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <>
-      <header
-        style={{
-          background: "#fff",
-          borderBottom: "1px solid #eee",
-          padding: "10px 20px",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1350px",
-            margin: "0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
-            <div
-              onClick={() => setPage("home")}
-              style={{
-                fontFamily: "Playfair Display, serif",
-                fontSize: "24px",
-                fontWeight: "700",
-                color: "#0b1b2b",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-              }}
-            >
-              BangleHouse
+      <header className="site-header">
+        <div className="header-inner">
+          {/* left: logo */}
+          <div className="header-left">
+            <div className="brand" onClick={() => setPage("home")}>
+              <span className="brand-mark">BH</span>
+              <span className="brand-text">BangleHouse</span>
             </div>
 
-            <nav>
-              <ul
-                style={{
-                  display: "flex",
-                  listStyle: "none",
-                  gap: "25px",
-                  margin: 0,
-                  padding: 0,
-                  fontWeight: 600,
-                  color: "#14213d",
-                }}
-              >
+            {/* nav */}
+            <nav className="main-nav" aria-label="Main navigation">
+              <ul>
                 <li>
                   <button
-                    onClick={() => setPage("home")}
+                    onClick={() => setPage("bangles")}
                     style={{
                       border: "none",
                       background: "transparent",
@@ -127,83 +101,68 @@ export default function App() {
                     Earnings
                   </button>
                 </li>
+                {/* add more nav items as needed */}
               </ul>
             </nav>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <div
-              onClick={onAvatarClick}
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                background: "#fff",
-                border: "1px solid #ddd",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-            >
-              {avatarSrc ? (
-                <img
-                  src={avatarSrc}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <svg width="22" height="22" fill="none" stroke="#555">
-                  <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
-                  <path d="M4 20a8 8 0 0116 0" />
+          {/* center: wide search */}
+          <div className="header-center">
+            <div className="search-wrap">
+              <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9aa0a6">
+                <path d="M21 21l-4.35-4.35" />
+                <circle cx="10.5" cy="10.5" r="6.5" />
+              </svg>
+              <input
+                type="search"
+                className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for products, brands and more"
+                aria-label="Search products"
+              />
+            </div>
+          </div>
+
+          {/* right: icons + labels */}
+          <div className="header-right">
+            <div className="icon-col" onClick={onAvatarClick} title="Profile">
+              <div className="icon-circle">
+                {avatarSrc ? (
+                  <img src={avatarSrc} alt="avatar" className="avatar-img" />
+                ) : (
+                  <svg width="22" height="22" fill="none" stroke="#333">
+                    <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+                    <path d="M4 20a8 8 0 0116 0" />
+                  </svg>
+                )}
+              </div>
+              <div className="icon-label">Profile</div>
+            </div>
+
+            <div className="icon-col" title="Wishlist">
+              <div className="icon-circle small">
+                <svg width="20" height="20" fill="none" stroke="#333">
+                  <path d="M20.8 8.6c0 6.3-8.8 11.6-8.8 11.6S3.2 14.9 3.2 8.6C3.2 6 5 4 7.6 4s3.4.9 3.4 2.1C11.4 4.9 12.9 4 14.4 4c2.6 0 4.4 2 4.4 4.6z" />
                 </svg>
-              )}
+              </div>
+              <div className="icon-label">Wishlist</div>
             </div>
 
-            <div style={{ cursor: "pointer" }}>
-              <svg width="22" height="22" fill="none" stroke="#333">
-                <path d="M20.8 8.6c0 6.3-8.8 11.6-8.8 11.6S3.2 14.9 3.2 8.6C3.2 6 5 4 7.6 4s3.4.9 3.4 2.1C11.4 4.9 12.9 4 14.4 4c2.6 0 4.4 2 4.4 4.6z" />
-              </svg>
+            <div className="icon-col" title="Cart" onClick={() => setPage("cart")}>
+              <div className="icon-circle">
+                <svg width="20" height="20" fill="none" stroke="#333">
+                  <path d="M6 6h14l-2 9H8L6 6z" />
+                  <circle cx="9" cy="18" r="1" />
+                  <circle cx="17" cy="18" r="1" />
+                </svg>
+                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              </div>
+              <div className="icon-label">Bag</div>
             </div>
-
-            <button
-              onClick={() => setPage("cart")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                border: "1px solid #eee",
-                padding: "6px 12px",
-                borderRadius: "6px",
-                background: "#fff",
-                cursor: "pointer",
-              }}
-            >
-              <svg width="20" height="20" fill="none" stroke="#333">
-                <path d="M6 6h14l-2 9H8L6 6z" />
-                <circle cx="9" cy="18" r="1" />
-                <circle cx="17" cy="18" r="1" />
-              </svg>
-              Cart
-              <span
-                style={{
-                  background: "#ff5252",
-                  color: "#fff",
-                  borderRadius: "50%",
-                  padding: "2px 7px",
-                  fontSize: "12px",
-                  fontWeight: "600",
-                }}
-              >
-                {cartCount}
-              </span>
-            </button>
           </div>
         </div>
+
         <input
           ref={fileRef}
           type="file"
@@ -213,7 +172,9 @@ export default function App() {
         />
       </header>
 
-      {page === "home" && <Home openCart={() => setPage("cart")} />}
+      {/* Pages */}
+      {page === "home" && <Home openCart={() => setPage("cart")} searchQuery={searchQuery} />}
+      {page === "bangles" && <Bangles openCart={() => setPage("cart")} searchQuery={searchQuery} />}
       {page === "cart" && <Cart goBack={() => setPage("home")} />}
       {page === "earnings" && (
         <main style={{ padding: 32 }}>
@@ -229,3 +190,5 @@ export default function App() {
     </>
   );
 }
+
+

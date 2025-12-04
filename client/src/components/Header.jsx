@@ -1,122 +1,118 @@
-// client/src/components/Header.jsx
-import React, { useState, useRef, useEffect } from "react";
-import "./Header.css";
+// client/src/pages/Home.jsx
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import ProductCard from "../components/ProductCard";
 
-/**
- * Simple header with:
- * - BangleHouse logo (text)
- * - Menu: Bangles, Earnings
- * - Right-side: avatar uploader, wishlist, cart
- *
- * Avatar is previewed locally. To upload to backend, call `uploadAvatarToServer(file)` (placeholder).
- */
+const API = "http://localhost:4000/api";
 
-export default function Header({ cartCount = 0 }) {
-  const [menu] = useState([
-    { key: "bangles", label: "Bangles", path: "/bangles" },
-    { key: "earnings", label: "Earnings", path: "/earnings" },
-  ]);
+export default function Home({ openCart, searchQuery = "" }) {
+  const [products, setProducts] = useState([]);
+  const [showUI, setShowUI] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+  const videoRef = useRef(null);
 
-  const [avatarSrc, setAvatarSrc] = useState(null);
-  const fileRef = useRef(null);
-
-  // load saved avatar from localStorage (simple persistence)
   useEffect(() => {
-    const saved = localStorage.getItem("bh_avatar");
-    if (saved) setAvatarSrc(saved);
+    (async () => {
+      try {
+        const res = await fetch(`${API}/products`);
+        const data = await res.json();
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+        setProducts([]);
+      }
+    })();
   }, []);
 
-  function onAvatarClick() {
-    fileRef.current?.click();
-  }
+  // Try programmatic play (many browsers allow muted autoplay if play() called)
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = "auto";
 
-  function handleFile(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    // preview locally
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAvatarSrc(reader.result);
+    const tryPlay = async () => {
       try {
-        localStorage.setItem("bh_avatar", reader.result); // quick persistence
-      } catch {}
+        const p = v.play();
+        if (p instanceof Promise) {
+          await p;
+        }
+        // if plays, let onEnded handle showing UI
+      } catch (err) {
+        // autoplay blocked -> show UI immediately
+        setShowUI(true);
+        setFadeIn(true);
+      }
     };
-    reader.readAsDataURL(file);
 
-    // optional: upload to backend (if you later implement an endpoint)
-    // uploadAvatarToServer(file);
+    const t = setTimeout(tryPlay, 50);
+    return () => clearTimeout(t);
+  }, []);
+
+  function onVideoEnded() {
+    setShowUI(true);
+    setTimeout(() => setFadeIn(true), 50);
   }
 
-  // placeholder for server upload; implement server route to receive file
-  async function uploadAvatarToServer(file) {
-    const fd = new FormData();
-    fd.append("avatar", file);
-    try {
-      const res = await fetch("http://localhost:4000/api/upload-avatar", {
-        method: "POST",
-        body: fd,
-      });
-      const json = await res.json();
-      console.log("uploaded avatar response:", json);
-      // json could contain the stored path which you can set as avatarSrc
-      // setAvatarSrc(json.path);
-    } catch (err) {
-      console.error("Avatar upload failed", err);
-    }
+  function onVideoError(e) {
+    console.error("[Intro] video error event:", e);
+    setShowUI(true);
+    setFadeIn(true);
   }
+
+  // filter products locally by header searchQuery (case-insensitive)
+  const filtered = useMemo(() => {
+    const q = (searchQuery || "").trim().toLowerCase();
+    if (!q) return products;
+    return products.filter((p) => {
+      const name = String(p.name ?? p.title ?? "").toLowerCase();
+      return name.includes(q);
+    });
+  }, [products, searchQuery]);
 
   return (
-    <header className="bh-header small">
-      <div className="bh-row">
-        <div className="bh-left">
-          <a className="bh-logo" href="/">BangleHouse</a>
-          <nav className="bh-nav">
-            <ul>
-              {menu.map((m) => (
-                <li key={m.key}>
-                  <a href={m.path}>{m.label}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+    <>
+      {!showUI && (
+        <div className="intro-overlay" style={{ width: "100%", height: 320, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <video
+            ref={videoRef}
+            src="/logo_intro.mp4"
+            muted
+            playsInline
+            onEnded={onVideoEnded}
+            onError={onVideoError}
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            aria-hidden="true"
+          />
         </div>
+      )}
 
-        <div className="bh-right">
-          <div className="bh-actions">
-            {/* Avatar / Profile */}
-            <div className="bh-avatar-wrap" onClick={onAvatarClick} role="button" title="Upload avatar">
-              {avatarSrc ? (
-                <img src={avatarSrc} alt="avatar" className="bh-avatar" />
-              ) : (
-                <div className="bh-avatar placeholder" aria-hidden> 
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" strokeWidth="1.2"/>
-                    <path d="M4 20a8 8 0 0116 0" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                  </svg>
-                </div>
-              )}
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{display:"none"}} />
-            </div>
-
-            {/* Wishlist */}
-            <a className="bh-icon" href="/wishlist" title="Wishlist">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M20.8 8.6c0 6.3-8.8 11.6-8.8 11.6S3.2 14.9 3.2 8.6C3.2 6 5 4 7.6 4c1.5 0 3 .9 3.4 2.1.4-1.2 1.9-2.1 3.4-2.1 2.6 0 4.4 2 4.4 4.6z" stroke="currentColor" strokeWidth="1"/>
-              </svg>
-            </a>
-
-            {/* Cart */}
-            <a className="bh-bag" href="/cart" title="Cart">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:8}}>
-                <path d="M6 6h15l-1.5 9h-12L6 6z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-                <circle cx="10" cy="20" r="1" fill="currentColor"/>
-                <circle cx="18" cy="20" r="1" fill="currentColor"/>
-              </svg>
-              <span className="bh-badge">{cartCount}</span>
-            </a>
+      {showUI && (
+        <main className={`product-grid ${fadeIn ? "fade-in" : ""}`} style={{ padding: 20, maxWidth: 1350, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <h2 style={{ margin: 0 }}>Featured Bangles</h2>
+            <div style={{ fontWeight: 700 }}>{filtered.length} results</div>
           </div>
-        </div>
-      </div>
-    </header>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {filtered.map((p) => (
+              <ProductCard key={p.id} product={p} openCart={openCart} />
+            ))}
+
+            {filtered.length === 0 && (
+              <div style={{ gridColumn: "1/-1", textAlign: "center", color: "#666", padding: 40 }}>
+                No products found. Try a different search.
+              </div>
+            )}
+          </div>
+        </main>
+      )}
+    </>
   );
 }
