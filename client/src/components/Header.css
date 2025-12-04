@@ -1,0 +1,27 @@
+/* Header.css (simple, compact) */
+.bh-header { background: #fff; border-bottom: 1px solid #f0efe9; position: sticky; top:0; z-index:50; }
+.bh-header.small { padding: 6px 0; }
+.bh-row { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:8px 16px; gap:12px; }
+.bh-left { display:flex; align-items:center; gap:18px; }
+.bh-logo { font-family: "Playfair Display", serif; font-weight:700; font-size:20px; color:#0b1b2b; text-decoration:none; padding-right:6px; }
+.bh-nav ul { list-style:none; margin:0; padding:0; display:flex; gap:14px; align-items:center; }
+.bh-nav a { text-decoration:none; color:#102a43; font-weight:600; padding:6px 8px; border-radius:6px; }
+.bh-nav a:hover { background:#f7f7f7; }
+
+/* Right actions */
+.bh-right { display:flex; align-items:center; gap:12px; }
+.bh-actions { display:flex; gap:12px; align-items:center; }
+.bh-icon, .bh-bag { display:inline-flex; align-items:center; justify-content:center; color:#102a43; text-decoration:none; padding:6px; border-radius:6px; }
+.bh-bag { border:1px solid #f0efe9; padding:6px 10px; position:relative; }
+.bh-badge { background:#ff6b6b; color:white; border-radius:999px; padding:2px 7px; font-size:12px; margin-left:4px; }
+
+/* Avatar */
+.bh-avatar-wrap { width:40px; height:40px; border-radius:999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; border:1px solid #eee; }
+.bh-avatar { width:100%; height:100%; object-fit:cover; display:block; }
+.bh-avatar.placeholder svg { width:22px; height:22px; color:#667; }
+
+/* small screens */
+@media (max-width:720px) {
+  .bh-nav { display:none; }
+  .bh-search { display:none; }
+}
